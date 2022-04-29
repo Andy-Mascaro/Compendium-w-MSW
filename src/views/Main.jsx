@@ -1,24 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import {fetchApi } from '../services/fetch';
+import { fetchApi } from '../services/fetch';
+import OrderList from '../components/Order';
+
 
 export default function Main() {
     const [characters, setCharacters] = useState([]);
+    const [order, setOrder] = useState('Alive');
+    // const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
     const data = async () => {
-      const info = await fetchApi();
-      console.log(characters);
+      const info = await fetchApi(order);
       setCharacters(info); 
+    //   setLoading(false);
     };
 
     data();
-
-  }, []);
+  }, [order]);
 
 
   return (
   <div>
+  <div>
+  <OrderList 
+    setOrder={setOrder}
+
+  />
+  </div>
   <h1>Character</h1>
   {characters.map((character) => ( 
       <div key={character.id}>
