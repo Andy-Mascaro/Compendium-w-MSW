@@ -1,4 +1,5 @@
-import { screen, render } from '@testing-library/react';
+import { screen, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import App from '../App';
@@ -35,9 +36,33 @@ test('should render Rick Sanchez', async () => {
 
 })
 
-// test('should render orderList', async () => {
-//     const Morty = {('https://rickandmortyapi.com/api/character')
+const Beebo = {
+    results: [ 
+        { 
+    id: 2,
+    name: "Beebo",
+    status: "Dead",
+    species: "Alien",
+    type: "",
+    gender: "Male",
+        },
+    ],
+  };
 
-//     }
-// })
+  describe('test 2', () => {
+  it('Should render Beebo', async () => {
+    render(<App />)
+await waitFor(async () => {
+        userEvent.selectOptions(screen.getByRole('combobox'), 'Dead');
+        server.use(rest.get(`https://rickandmortyapi.com/api/character`, (req, res, ctx) => res(ctx.json(Beebo))
+        )
+    );
+    const name = await screen.findByText('Beebo');
+    expect(name).toBeInTheDocument();
+    screen.debug();
+    },
+    { timeout: 3000 }
+    )
+  });
+});
 
